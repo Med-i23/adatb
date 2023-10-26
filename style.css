@@ -5,7 +5,8 @@ body {
     padding: 0;
 }
 
-.container {
+
+.container{
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -20,11 +21,22 @@ body {
     width: 300px;
 }
 
+#testForm{
+    background: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    padding: 20px;
+    width: 600px;
+    alignment: center;
+}
+
+
+
 h2 {
     text-align: center;
 }
 
-input {
+input:not([type="radio"])  {
     width: 93%;
     padding: 10px;
     margin: 10px 0;

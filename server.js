@@ -8,10 +8,10 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 const dbConfig = {
-    host: 'your-mysql-host',
-    user: 'your-mysql-username',
-    password: 'your-mysql-password',
-    database: 'your-database-name',
+    host: 'localhost',
+    user: 'adatb',
+    password: 'adatb',
+    database: 'adatb',
 };
 
 app.use(express.static('public'));
