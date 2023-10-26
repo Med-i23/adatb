@@ -28,6 +28,7 @@ app.post('/register', async (req, res) => {
         const [results] = await connection.execute('INSERT INTO users (username, password) VALUES (?, ?)', [username, password]);
         connection.end();
         res.status(200).send('Sikeres regisztráció');
+        res.redirect('/main.html');
     } catch (error) {
         console.error('Error:', error);
         res.status(500).send('Sikertelen regisztráció');
@@ -43,6 +44,7 @@ app.post('/login', async (req, res) => {
         connection.end();
         if (results.length === 1) {
             res.status(200).send('Sikeres belépés');
+            res.redirect('/main.html');
         } else {
             res.status(401).send('Helyetelen felhasználó név vagy jelszó');
         }
