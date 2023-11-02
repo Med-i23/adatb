@@ -46,16 +46,15 @@ nav ul li{
     text-align: center;
     animation: down 1s forwards;
     border-radius: 30pt;
-
+    margin-right: 40pt;
 }
 
 
-
 .container{
-    display: flex;
+    display: grid;
     justify-content: space-around;
     align-items: center;
-    height: 100vh;
+    height: 80vh;
 }
 
 .form-container {
