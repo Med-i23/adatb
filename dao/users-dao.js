@@ -1,18 +1,47 @@
 const mysql = require('mysql2/promise');
 
-class UsersDao {
-    async createUsers(username, password, fullname, email, role){
+class UsersDAO {
+    async createUsers(username, password, fullname, role){
         const connection = await mysql.createConnection({host:'localhost',user:'adatb',database:'adatb'})
-        await connection.query('INSERT INTO users (Username, Password, FullName, Email, Role) VALUES (?, ?, ?, ?)', [name, username, password, role])
+        await connection.query('INSERT INTO users (Username, Password, FullName, Role) VALUES (?, ?, ?, ?)', [username, password, fullname, role])
         connection.end();
         return;
     }
 
-    async modifyUsers(id, username, password, fullname, email, role) {
+    async modifyUsers(id, username, password, fullname, role) {
         const connection = await mysql.createConnection({host:'localhost',user:'adatb',database:'adatb'});
-        await connection.query('UPDATE users SET Username=?, Password=?, FullName=?, Email=?, Role=? WHERE id = ?', [name, username, password, fullname, email, role]);
+        await connection.query('UPDATE users SET Username=?, Password=?, FullName=?, Role=? WHERE id = ?', [username, password, fullname, role]);
         connection.end();
         return;
     };
 
+    async deleteUsers(id) {
+        const connection = await mysql.createConnection({host:'localhost',user:'adatb',database:'adatb'});
+        await connection.execute('DELETE FROM users WHERE id = ? ', [id]);
+        connection.end();
+        return;
+    };
+
+    async getUsers() {
+        const connection = await mysql.createConnection({host:'localhost',user:'adatb',database:'adatb'});
+        const [adatok,query]= await connection.execute('SELECT * FROM felhasznalo ');
+        connection.end();
+        return(adatok);
+    };
+
+    async getUsersByUserName(username) {
+        const connection = await mysql.createConnection({host:'localhost',user:'adatb',database:'adatb'});
+        const query= await connection.execute('SELECT * FROM felhasznalo WHERE username = ? ', [username]);
+        connection.end();
+        return query[0][0];
+    };
+
+    async getUsersByID(id) {
+        const connection = await mysql.createConnection({host:'localhost',user:'adatb',database:'adatb'});
+        const query= await connection.execute('SELECT * FROM felhasznalo WHERE id = ? ', [id]);
+        connection.end();
+        return query[0][0];
+    };
 }
+
+module.exports = UsersDAO;
