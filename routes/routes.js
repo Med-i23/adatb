@@ -126,3 +126,6 @@ router.post("/register", async(req, res) => {
 
 
 });
+//#endregion
+
+module.exports = router;

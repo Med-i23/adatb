@@ -24,7 +24,7 @@ class UsersDAO {
 
     async getUsers() {
         const connection = await mysql.createConnection({host:'localhost',user:'adatb',database:'adatb'});
-        const [adatok,query]= await connection.execute('SELECT * FROM felhasznalo ');
+        const [adatok,query]= await connection.execute('SELECT * FROM users ');
         connection.end();
         return(adatok);
     };
