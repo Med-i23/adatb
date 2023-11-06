@@ -115,7 +115,7 @@ router.post("/register", async(req, res) => {
             hibaRegister:"Minden mezőt kötelező kitölteni"
         });
     }
-    await new UsersDAO().createUsers(username, password, fullname, "ROLE_STUDENT");
+    await new UsersDAO().createUsers(name, username, password, "ROLE_STUDENT");
     return res.render('index', {
         current_role: null,
         token: null,
