@@ -126,6 +126,30 @@ router.post("/register", async(req, res) => {
 
 
 });
+
+router.get("/main", async (req, res) => {
+    const token = req.cookies.jwt;
+    let current_username;
+    let current_role;
+    let current_id;
+    let current_name;
+    if (token) {
+        jwt.verify(token, jwtSecret.jwtSecret, (err, decodedToken) => {
+            current_username = decodedToken.username;
+            current_name= decodedToken.name;
+            current_role = decodedToken.role;
+            current_id = decodedToken.id;
+        });
+    }
+
+
+    return res.render('main', {
+        current_username: current_username,
+        current_name:current_name,
+        current_role: current_role,
+        current_id: current_id,
+    });
+});
 //#endregion
 
 module.exports = router;
