@@ -12,11 +12,73 @@
             margin: 0;
             padding: 0;
         }
+
+        .container{
+            display: grid;
+            justify-content: space-around;
+            align-items: center;
+            height: 80vh;
+        }
+
+        .form-container {
+            background: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            padding: 20px;
+            width: 300px;
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        input:not([type="radio"])  {
+            width: 93%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            width: 100%;
+            background: #007BFF;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        .hiba{
+            background-color: red;
+            padding: 0.8em;
+            color: white;
+            border-radius: 4px;
+            width: 60%;
+            margin-left: 2%;
+        }
+        #welcome{
+            text-align: center;
+            width: 100%;
+            background: #007BFF;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
-
-
+<div class="col-md-6" id="welcome">
+    Welcome to your schools Moodle site!
+</div>
 <div class="container">
     <div class="form-container">
         <h2>Register</h2>
@@ -33,6 +95,9 @@
     </div>
     <div class="form-container">
         <h2>Login</h2>
+        <% if(hibaLogin){ %>
+            <p class="hiba" style="padding-left: 1%"><%- hibaLogin %></p>
+        <% } %>
         <form method="POST" id="login-form" action="/login">
             <input type="text" name="username" placeholder="Username" required>
             <input type="password" name="password" placeholder="Password" required>

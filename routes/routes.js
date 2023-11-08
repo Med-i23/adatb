@@ -58,7 +58,6 @@ router.post("/login", async(req, res) => {
             return res.redirect('/main');
 
         }else {
-
             return res.render('index', {
                 current_role: null,
                 token: null,
@@ -114,6 +113,7 @@ router.post("/register", async(req, res) => {
             hibaLogin: null,
             hibaRegister:"Minden mezőt kötelező kitölteni"
         });
+
     }
     await new UsersDAO().createUsers(name, username, password, "ROLE_STUDENT");
     return res.render('index', {

@@ -8,13 +8,20 @@ class UsersDAO {
         return;
     }
 
-
     async getUsersByUserName(username) {
         const connection = await mysql.createConnection({host:'localhost',user:'root',database:'moodletest'});
         const query= await connection.execute('SELECT * FROM user WHERE username = ? ', [username]);
         connection.end();
         return query[0][0];
     };
+
+    async modifyuser(id,name, username, password, role) {
+        const connection = await mysql.createConnection({host:'localhost',user:'root',database:'moodletest'});
+        await connection.query('UPDATE user SET name=?, username=?, password=?, role=? WHERE id = ?', [name, username, password, role, id]);
+        connection.end();
+        return;
+    };
+
 
 
 }
