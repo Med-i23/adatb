@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Questions</title>
+    <style>
+        .card {
+            width: 300px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 20px;
+            margin: 20px;
+            background-color: #f9f9f9;
+            box-shadow: 2px 2px 5px #888888;
+        }
+
+        .question {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .answer {
+            margin-top: 10px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+<a href="/createQuestions">Create Questions</a>
+
+    <%for (var i = 0; i < all_questions.length; i++) {%>
+        <div class="card">
+            <div class="question"><%= all_questions[i].text%></div>
+            <a href="/editQuestion/<%= all_questions[i].id%>">edit</a>
+        </div>
+    <%}%>
+</body>
+</html>

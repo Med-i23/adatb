@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Questions</title>
+</head>
+<body>
+<form method="POST" id="question-form" action="/addQuestion">
+    <label for="question">Question:</label>
+    <input type="text" id="question" name="question" required>
+    <br>
+    <label for="correct_answer">Correct Answer:</label>
+    <input type="text" id="correct-answer" name="correct-answer" required>
+    <br>
+    <label for="wrong_answer1">Wrong Answer 1:</label>
+    <input type="text" id="wrong_answer1" name="wrong-answer-1" required>
+    <br>
+    <label for="wrong_answer2">Wrong Answer 2:</label>
+    <input type="text" id="wrong_answer2" name="wrong-answer-2" required>
+    <br>
+    <label for="score">Score:</label>
+    <input type="number" id="score" name="score" required>
+    <br>
+    <input type="submit" value="Create Question">
+</form>
+
+</body>
+</html>
