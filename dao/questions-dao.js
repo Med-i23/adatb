@@ -1,9 +1,9 @@
 const mysql = require('mysql2/promise');
 
 class QuestionsDao{
-    async createQuestion(test_id, text, score, correct_answer, wrong_anwser1, wrong_anwser2){
+    async createQuestion(text, score, correct_answer, wrong_anwser1, wrong_anwser2){
         const connection = await mysql.createConnection({host:'localhost',user:'root',database:'moodletest'})
-        await connection.query('INSERT INTO question (test_id, text, score, correct_answer, wrong_answer1, wrong_answer2) VALUES (?, ?, ?, ?, ?, ?)', [test_id, text, score, correct_answer, wrong_anwser1, wrong_anwser2]);
+        await connection.query('INSERT INTO question (text, score, correct_answer, wrong_answer1, wrong_answer2) VALUES (?, ?, ?, ?, ?)', [text, score, correct_answer, wrong_anwser1, wrong_anwser2]);
         connection.end();
         return;
     }

@@ -1,9 +1,9 @@
 const mysql = require('mysql2/promise');
 
 class TestsDao{
-    async createTest(creator_id, name, creationdate, minpoint){
+    async createTest(creator_id, name, creationdate, minpoint, noq){
         const connection = await mysql.createConnection({host:'localhost',user:'root',database:'moodletest'})
-        await connection.query('INSERT INTO test (creator_id, name, creationdate, minpoint) VALUES (?, ?, ?, ?)', [creator_id, name, creationdate, minpoint])
+        await connection.query('INSERT INTO test (creator_id, name, creationdate, minpoint, noq) VALUES (?, ?, ?, ?, ?)', [creator_id, name, creationdate, minpoint, noq])
         connection.end();
         return;
     }
@@ -13,9 +13,17 @@ class TestsDao{
         connection.end();
     };
 
-    async getTestIdByName(name){
+    async getTestById(id){
         const connection = await mysql.createConnection({host:'localhost',user:'root',database:'moodletest'});
-        const [results,query]= await connection.execute('SELECT id FROM test WHERE ?'[name]);
+        const results= await connection.execute('SELECT * FROM test WHERE id=?', [id]);
+        connection.end();
+        return results[0][0];
+    }
+
+
+    async getTests(){
+        const connection = await mysql.createConnection({host:'localhost',user:'root',database:'moodletest'});
+        const [results,query]= await connection.execute('SELECT * FROM test');
         connection.end();
         return results;
     }
