@@ -1,13 +1,25 @@
 const mysql = require('mysql2/promise');
 
 class QuestionsDao{
-    async createQuestion(text, score, correct_answer, wrong_anwser1, wrong_anwser2){
+    async createQuestion(test_id, text, score, correct_answer, wrong_answer1, wrong_answer2){
         const connection = await mysql.createConnection({host:'localhost',user:'root',database:'moodletest'})
-        await connection.query('INSERT INTO question (text, score, correct_answer, wrong_answer1, wrong_answer2) VALUES (?, ?, ?, ?, ?)', [text, score, correct_answer, wrong_anwser1, wrong_anwser2]);
+        await connection.query('INSERT INTO question (test_id, text, score, correct_answer, wrong_answer1, wrong_answer2) VALUES (?, ?, ?, ?, ?, ?)', [test_id, text, score, correct_answer, wrong_answer1, wrong_answer2]);
         connection.end();
         return;
     }
 
+    async getNumberOfQuestionsByTestID(test_id){
+        const connection = await mysql.createConnection({host:'localhost',user:'root',database:'moodletest'});
+        const results= await connection.execute('SELECT COUNT(test_id) AS number FROM question WHERE test_id=?', [test_id]);
+        connection.end();
+        return results[0][0];
+    }
+    async getNumberOfQuestionsByTestName(name){
+        const connection = await mysql.createConnection({host:'localhost',user:'root',database:'moodletest'});
+        const results= await connection.execute('SELECT COUNT(test_id) FROM question WHERE test_id=?', [test_id]);
+        connection.end();
+        return results;
+    }
 
     async getQuestions(){
         const connection = await mysql.createConnection({host:'localhost',user:'root',database:'moodletest'});

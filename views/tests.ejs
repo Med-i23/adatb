@@ -32,7 +32,16 @@
     </style>
 </head>
 <body>
+
 <a href="/createTest">Create Test</a>
+<% if(typeof message !== "undifeined"){ %>
+<script>
+    function sex(valami){
+        alert("Max Question");
+    }
+    sex();
+</script>
+<% }%>
 
 <%for (var i = 0; i < all_test.length; i++) {%>
     <div class="card">
@@ -40,6 +49,11 @@
         <div>Minimum point:</div>
         <div class="question"><%= all_test[i].minpoint%></div>
         <a href="/doTest/<%= all_test[i].id %>">Fill</a>
+        <%if (current_role==="ROLE_ADMIN" || current_role==="ROLE_TEACHER"){ %>
+        <div>
+        <a href="/updateTest/<%= all_test[i].id%>">Add Question</a>
+        </div>
+        <% } %>
     </div>
 <%}%>
 </body>
