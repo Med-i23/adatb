@@ -1,29 +1,9 @@
-<header>
-    <header class="header_section">
-        <div class="container-fluid">
-            <nav class="navbar navbar-expand-lg custom_nav-container pt-3">
-                <a class="navbar-brand" href="index.html">
-                    <img src="images/logo.png" alt="" />
-                </a>
-
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <div class="d-flex ml-auto flex-column flex-lg-row align-items-center">
-                        <ul class="navbar-nav  ">
-                            <li class="nav-item active">
-                                <a class="nav-link" href="main.ejs">Home</span></a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="results.ejs">
-                                    results
-                                </a>
-                            </li>
-                            <li class="nav-item box-shadow btn" style="background-color: #e8fff7; margin-left: 2%">
-                                <a class="nav-link" href="/logout">Kijelentkezés</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </nav>
+<header id="header">
+    <nav>
+        <div class="topnav">
+            <a class="active" href="/main">Home</a>
+            <a class="logoutbutton" href="/logout">Logout</a>
+            <div class="usernameview">Current user: <%= current_username%></div>
         </div>
-    </header>
+    </nav>
 </header>

@@ -25,14 +25,33 @@
             font-weight: bold;
         }
 
-        .answer {
-            margin-top: 10px;
-            font-size: 16px;
+        .createtest{
+            width: 10%;
+            background: #007BFF;
+            color: #fff;
+            border: none;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+            cursor: pointer;
         }
-    </style>
-</head>
-<body>
 
+    </style>
+    <%- include('assets/head') %>
+</head>
+<header>
+    <%- include('assets/header') %>
+</header>
+<body>
+<% if(confirm_message){ %>
+<p class="confirm"><%- confirm_message%></p>
+<% }%>
+
+
+
+<div class="createtest">
+<a href="/createTest">Create Test</a>
+</div>
 <%for (var i = 0; i < all_test.length; i++) {%>
     <div class="card">
         <div class="question"><%= all_test[i].name%></div>
@@ -41,10 +60,11 @@
         <a href="/doTest/<%= all_test[i].id %>">Fill</a>
         <%if (current_role==="ROLE_ADMIN" || current_role==="ROLE_TEACHER"){ %>
         <div>
-        <a href="/updateTest/<%= all_test[i].id%>">Add Question</a>
+        <a href="/updateTest/<%= all_test[i].id%>">Add Question/Change Name/Delete Test</a>
         </div>
         <% } %>
     </div>
 <%}%>
+
 </body>
 </html>

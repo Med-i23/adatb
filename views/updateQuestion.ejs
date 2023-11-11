@@ -3,8 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <title>Result</title>
+    <%- include('assets/head') %>
 </head>
+<header>
+    <%- include('assets/header') %>
+</header>
 <body>
+<div class="container">
     <form method="POST" id="question-form" action="/editQuestion/<%= current_question.id%>">
         <label for="question">Question:</label>
         <input type="text" id="question" name="text" value="<%= current_question.text%>" required="required">
@@ -27,5 +32,6 @@
     <form action="/deleteQuestion/<%= current_question.id %>" method="post" style="margin-left: 0px; padding-left: 1%">
         <button class="btn-sm btn-dark details" style="background-color: red;" value="delete">Delete question</button>
     </form>
+</div>
 </body>
 </html>

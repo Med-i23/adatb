@@ -1,15 +1,23 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
-    <title>Edit Test</title>
+    <%- include('assets/head') %>
+
 </head>
+<header>
+    <%- include('assets/header') %>
+</header>
 <body>
-<%= test.id%>
-<form action="/updateTestQ/<%= test.id%>" method="post" id="testForm">
+<% if(error_message){ %>
+    <p class="confirm" style="background: red; color: white" ><%- error_message%></p>
+<% }%>
+
+<div class="container">
+<form action="/updateTestQ/<%= test.id%>" method="post" class="form-container">
     <label for="testName"><%= test.name%></label>
     <div>
-    <label for="question">Add new questions:</label>
+    <label for="question">Add new question:</label>
     <input type="text" id="question" name="question" placeholder="Question" rows="4" cols="50" required>
     </div>
     <div>
@@ -18,7 +26,22 @@
     <input type="text" id="wrong_answer2" name="wrong_answer2" placeholder="wrong answer"rows="4" cols="50" required>
     <input type="text" id="score" name="score" placeholder="score"rows="4" cols="50" required>
     </div>
-    <input type="submit" value="Submit">
+    <button type="submit">Create</button>
 </form>
+
+<form action="/changeTestName/<%= test.id%>" method="post" class="form-container">
+    <div>
+        Change name:
+    <input type="text" id="question" name="name" value="<%= test.name%>" rows="4" cols="50" required>
+    </div>
+    <button type="submit">Change</button>
+</form>
+
+
+    <form action="/deleteTest/<%= test.id%>" method="post" style="margin-left: 0px; padding-left: 1%">
+        <button class="btn-sm btn-dark details" style="background-color: red;" value="delete">Delete test</button>
+    </form>
+</div>
+
 </body>
 </html>

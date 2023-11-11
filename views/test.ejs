@@ -4,16 +4,38 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" type="text/css" href="../public/css/style.css">
-  <title>Test</title>
+  <%- include('assets/head')%>
 </head>
+<header>
+  <%- include('assets/header') %>
+</header>
 <body>
+<div>
+  Beginning: <%= date%>
+</div>
+<div>
+  User: <%= current_username%>
+</div>
 
-<h1><%= test.name%></h1>
-
-<form>
-
+<div class="container">
+<form method="post" class="form-container" action="/giveInTes/<%= test.id%>">
+  <h1><%= test.name %></h1>
+  <% for (var i = 0; i < questions.length; i++) { %>
+    <div>
+      <label for="questionName_<%= i %>"><%= questions[i].text %></label>
+    </div>
+    <div>
+      <select id="selectOption" name="selectOption">
+        <option value="nothing">-</option>
+        <option value="correct_answer"><%= questions[i].correct_answer%></option>
+        <option value="wrong_answer1"><%= questions[i].wrong_answer1%></option>
+        <option value="wrong_answer2"><%= questions[i].wrong_answer2%></option>
+      </select>
+      </div>
+  <% } %>
+  <input type="submit" value="Submit">
 </form>
-
+</div>
 
 </body>
 </html>

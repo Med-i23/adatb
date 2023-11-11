@@ -52,6 +52,12 @@ class QuestionsDao{
         return results[0][0];
     }
 
+    async getQuestionsByTestId(test_id){
+        const connection = await mysql.createConnection({host:'localhost',user:'root',database:'moodletest'});
+        const [results,query]= await connection.execute('SELECT * FROM question WHERE test_id=?', [test_id]);
+        connection.end();
+        return results;
+    }
 
     async getQuestionsByText(text){
         const connection = await mysql.createConnection({host:'localhost',user:'root',database:'moodletest'});

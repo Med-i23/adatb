@@ -243,11 +243,29 @@ router.post("/editQuestion/:id", async (req, res) => {
 
 });
 
-router.post("/deleteQuestion/:id", async (req, res) => {
+router.post("/deleteTest/:id", async (req, res) => {
+    const token = req.cookies.jwt;
     let id = req.params.id;
-    await new QuestionsDAO().deleteQuestion(id);
-    res.redirect('/questions');
+    let current_role;
+    let current_username;
+    if (token) {
+        jwt.verify(token, jwtSecret.jwtSecret, (err, decodedToken) => {
+            current_username = decodedToken.username;
+            current_role = decodedToken.role;
+        });
+    }
+
+    await new TestsDAO().deleteTestandQuestionsForIt(id);
+
+    let tests = await new TestsDAO().getTests();
+    return res.render('tests', {
+        current_username: current_username,
+        current_role: current_role,
+        all_test: tests,
+        confirm_message: "Test deleted Successfully"
+    });
 });
+
 
 
 //#end-region
@@ -268,12 +286,13 @@ router.get("/tests", async (req, res) => {
     return res.render('tests', {
         current_username: current_username,
         current_role: current_role,
-        all_test: tests
+        all_test: tests,
+        confirm_message: null
     });
 
 });
 
-router.get("/doTest/:id", async (req, res) => {
+router.post("/deleteTest/:id", async (req, res) => {
     const token = req.cookies.jwt;
     let id = req.params.id;
     let current_role;
@@ -284,17 +303,72 @@ router.get("/doTest/:id", async (req, res) => {
             current_role = decodedToken.role;
         });
     }
+
+    await new TestsDAO().deleteTestandQuestionsForIt(id);
+
+    return res.redirect('/tests')
+});
+
+
+router.get("/doTest/:id", async (req, res) => {
+    const token = req.cookies.jwt;
+    let date = new Date();
+    let id = req.params.id;
+    let current_role;
+    let current_username;
+    let current_id;
+    if (token) {
+        jwt.verify(token, jwtSecret.jwtSecret, (err, decodedToken) => {
+            current_username = decodedToken.username;
+            current_role = decodedToken.role;
+            current_id = decodedToken.id;
+        });
+    }
+
     let test = await new TestsDAO().getTestById(id);
+    let questions = await new QuestionsDAO().getQuestionsByTestId(id);
 
     return res.render('test', {
         id: id,
+        date: date,
         current_username: current_username,
         current_role: current_role,
-        test: test
+        current_id: current_id,
+        test: test,
+        questions: questions
     });
 
 });
 
+router.post("/giveInTest/:id", async (req, res) => {
+    const token = req.cookies.jwt;
+    let current_id;
+    let current_role;
+    let current_username;
+    if (token) {
+        jwt.verify(token, jwtSecret.jwtSecret, (err, decodedToken) => {
+            current_id = decodedToken.id;
+            current_username = decodedToken.username;
+            current_role = decodedToken.role;
+        });
+    }
+
+    let is_there = await new TestsDAO().getTestName(name);
+    if(is_there){
+        return res.render('createTest', {
+            current_id: current_id,
+            current_username: current_username,
+            current_role: current_role,
+            message: "Name Already Exists"
+        });
+    }
+    else{
+        await new TestsDAO().createTest(current_id, name, date, minpoint, noq);
+        return res.redirect("/tests");
+    }
+
+
+});
 
 
 router.get("/createTest", async (req, res) => {
@@ -313,10 +387,12 @@ router.get("/createTest", async (req, res) => {
     return res.render('createTest', {
         current_id: current_id,
         current_username: current_username,
-        current_role: current_role
+        current_role: current_role,
+        message: null
     });
 
 });
+
 
 router.post("/addTest", async (req, res) => {
     const token = req.cookies.jwt;
@@ -325,14 +401,30 @@ router.post("/addTest", async (req, res) => {
     let {minpoint} = req.body;
     let date = new Date();
     let current_id;
+    let current_role;
+    let current_username;
     if (token) {
         jwt.verify(token, jwtSecret.jwtSecret, (err, decodedToken) => {
             current_id = decodedToken.id;
+            current_username = decodedToken.username;
+            current_role = decodedToken.role;
         });
     }
 
-    await new TestsDAO().createTest(current_id, name, date, minpoint, noq);
-    return res.redirect("/tests");
+    let is_there = await new TestsDAO().getTestName(name);
+    if(is_there){
+        return res.render('createTest', {
+            current_id: current_id,
+            current_username: current_username,
+            current_role: current_role,
+            message: "Name Already Exists"
+        });
+    }
+    else{
+        await new TestsDAO().createTest(current_id, name, date, minpoint, noq);
+        return res.redirect("/tests");
+    }
+
 
 });
 
@@ -355,7 +447,8 @@ router.get("/updateTest/:id", async(req, res) => {
         current_username: current_username,
         current_role: current_role,
         test: test,
-        test_id: test_id
+        test_id: test_id,
+        error_message: null
     });
 
 });
@@ -398,6 +491,63 @@ router.post("/updateTestQ/:id", async (req, res) => {
         });
     }
 
+});
+
+router.post("/changeTestName/:id", async (req, res) => {
+    const token = req.cookies.jwt;
+    let id = req.params.id;
+    let {name} = req.body;
+    let current_role;
+    let current_username;
+    if (token) {
+        jwt.verify(token, jwtSecret.jwtSecret, (err, decodedToken) => {
+            current_username = decodedToken.username;
+            current_role = decodedToken.role;
+        });
+    }
+
+    let test = await new TestsDAO().getTestById(id);
+    let is_there = await new TestsDAO().getTestName(name);
+
+    if(is_there){
+        return res.render('updateTest', {
+            current_username: current_username,
+            current_role: current_role,
+            error_message: "Name Already Exists",
+            test: test,
+            test_id: id
+        });
+
+    }
+    else{
+        await new TestsDAO().changeTestName(id, name);
+        return res.redirect("/tests");
+    }
+
+
+});
+//#end-region
+
+//#results-region
+
+router.get("/results", async(req, res) => {
+    const token = req.cookies.jwt;
+    let current_id;
+    let current_role;
+    let current_username;
+    if (token) {
+        jwt.verify(token, jwtSecret.jwtSecret, (err, decodedToken) => {
+            current_username = decodedToken.username;
+            current_role = decodedToken.role;
+            current_id = decodedToken.id;
+        });
+    }
+
+    return res.render('results', {
+        current_username: current_username,
+        current_role: current_role,
+        current_id: current_id
+    });
 
 });
 

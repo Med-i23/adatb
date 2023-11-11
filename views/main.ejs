@@ -1,18 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Moodle</title>
+    <%- include('assets/head') %>
 
 </head>
+
 <header>
-    <%- include('assets/header', {oldal: "main"}) %>
+    <%- include('assets/header')%>
 </header>
 <body>
-<a href="/questions">questions</a>
-<a href="/tests">Tests</a>
-
-
-
+<div>
+    <div>
+        <a href="/tests">Tests</a>
+    </div>
+    <div>
+        <a href="/results">Results</a>
+    </div>
+    <% if(current_role==="ROLE_ADMIN" || current_role==="ROLE_TEACHER"){%>
+    <div>
+        <a href="/questions">Questions</a>
+    </div>
+    <%}%>
+    <% if(current_role==="ROLE_ADMIN"){%>
+    <div>
+        <a href="#">User Role Manager</a>
+    </div>
+    <%}%>
+</div>
 </body>
 </html>
