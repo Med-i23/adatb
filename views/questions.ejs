@@ -31,7 +31,7 @@
     <%for (var i = 0; i < all_questions.length; i++) {%>
         <div class="card">
             <div class="question"><%= all_questions[i].text%></div>
-            <a href="/editQuestion/<%= all_questions[i].id%>">edit</a>
+            <a href="/updateQuestion/<%= all_questions[i].id%>">edit</a>
         </div>
     <%}%>
 </body>

@@ -5,23 +5,27 @@
     <title>Result</title>
 </head>
 <body>
-    <form method="POST" id="question-form" action="/editQuestion %>">
+    <form method="POST" id="question-form" action="/editQuestion/<%= current_question.id%>">
         <label for="question">Question:</label>
-        <input type="text" id="question" name="question" value="<%= current_question.text%>" required="required">
+        <input type="text" id="question" name="text" value="<%= current_question.text%>" required="required">
         <br>
         <label for="correct_answer">Correct Answer:</label>
-        <input type="text" id="correct-answer" name="correct-answer" value="<%= current_question.correct_answer%>" required="required">
+        <input type="text" id="correct-answer" name="correct_answer" value="<%= current_question.correct_answer%>" required="required">
         <br>
         <label for="wrong_answer1">Wrong Answer 1:</label>
-        <input type="text" id="wrong_answer1" name="wrong-answer-1" value="<%= current_question.wrong_answer1%>" required="required">
+        <input type="text" id="wrong_answer1" name="wrong_answer1" value="<%= current_question.wrong_answer1%>" required="required">
         <br>
         <label for="wrong_answer2">Wrong Answer 2:</label>
-        <input type="text" id="wrong_answer2" name="wrong-answer-2" value="<%= current_question.wrong_answer2%>" required="required">
+        <input type="text" id="wrong_answer2" name="wrong_answer2" value="<%= current_question.wrong_answer2%>" required="required">
         <br>
         <label for="score">Score:</label>
         <input type="number" id="score" name="score" value="<%= current_question.score%>" required="required">
         <br>
-        <input type="submit" value="Create Question">
+        <input type="submit" value="Update Question">
+    </form>
+
+    <form action="/deleteQuestion/<%= current_question.id %>" method="post" style="margin-left: 0px; padding-left: 1%">
+        <button class="btn-sm btn-dark details" style="background-color: red;" value="delete">Delete question</button>
     </form>
 </body>
 </html>

@@ -8,31 +8,48 @@ class QuestionsDao{
         return;
     }
 
+    async updateQuestion(id, text, score, correct_answer, wrong_answer1, wrong_answer2){
+        const connection = await mysql.createConnection({host:'localhost',user:'root',database:'moodletest'});
+        await connection.execute('UPDATE question SET text=?, score=?, correct_answer=?, wrong_answer1=?, wrong_answer2=? WHERE id = ?', [text, score, correct_answer, wrong_answer1, wrong_answer2, id]);
+        connection.end();
+        return;
+    };
+
+    async deleteQuestion(id) {
+        const connection = await mysql.createConnection({host:'localhost',user:'root',database:'moodletest'});
+        await connection.execute('DELETE FROM question WHERE id = ? ', [id]);
+        connection.end();
+        return;
+    };
+
+
+    async getTestIdByQuestionId(id){
+        const connection = await mysql.createConnection({host:'localhost',user:'root',database:'moodletest'});
+        const results= await connection.execute('SELECT test_id FROM question WHERE id=?', [id]);
+        connection.end();
+        return results[0][0];
+    }
+
+
     async getNumberOfQuestionsByTestID(test_id){
         const connection = await mysql.createConnection({host:'localhost',user:'root',database:'moodletest'});
         const results= await connection.execute('SELECT COUNT(test_id) AS number FROM question WHERE test_id=?', [test_id]);
         connection.end();
         return results[0][0];
     }
-    async getNumberOfQuestionsByTestName(name){
-        const connection = await mysql.createConnection({host:'localhost',user:'root',database:'moodletest'});
-        const results= await connection.execute('SELECT COUNT(test_id) FROM question WHERE test_id=?', [test_id]);
-        connection.end();
-        return results;
-    }
 
     async getQuestions(){
         const connection = await mysql.createConnection({host:'localhost',user:'root',database:'moodletest'});
-        const [results,query]= await connection.execute('SELECT text, score, correct_answer, wrong_answer1, wrong_answer2  FROM question');
+        const [results,query]= await connection.execute('SELECT * FROM question');
         connection.end();
         return results;
     }
 
     async getQuestionById(id){
         const connection = await mysql.createConnection({host:'localhost',user:'root',database:'moodletest'});
-        const [results,query]= await connection.execute('SELECT * FROM question WHERE id=?', [id]);
+        const results= await connection.execute('SELECT * FROM question WHERE id=?', [id]);
         connection.end();
-        return results;
+        return results[0][0];
     }
 
 
@@ -50,13 +67,6 @@ class QuestionsDao{
         return;
     }
 
-    async duplicateQuestionOnAsign(test_id, text, score, correct_answer, wrong_anwser1, wrong_anwser2){
-        const connection = await mysql.createConnection({host:'localhost',user:'root',database:'orarend'});
-        await connection.execute('UPDATE ora SET osztaly_id=? , tanar_id=? , terem_id=? , oranev=? , nap=? , ora=? WHERE id = ?', [osztaly_id , tanar_id , terem_id , oranev , nap , ora, id]);
-        this.asignTestToQuestion(test_id, text);
-        connection.end();
-        return;
-    }
 }
 
 module.exports = QuestionsDao;

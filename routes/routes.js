@@ -169,6 +169,7 @@ router.get("/questions", async (req, res) => {
     }
     let questions = await new QuestionsDAO().getQuestions();
 
+
     return res.render('questions', {
         current_username: current_username,
         current_role: current_role,
@@ -206,7 +207,7 @@ router.post("/addQuestion", async(req, res) => {
     res.redirect("/questions");
 });
 
-router.get("/editQuestion/:id", async (req, res) => {
+router.get("/updateQuestion/:id", async (req, res) => {
     const token = req.cookies.jwt;
     let id = req.params.id;
     let current_role;
@@ -218,28 +219,37 @@ router.get("/editQuestion/:id", async (req, res) => {
         });
     }
 
-    let current_question = await new QuestionsDAO().getQuestionById(id);
+    const current_question = await new QuestionsDAO().getQuestionById(id);
 
     return res.render('updateQuestion', {
         id:id,
         current_username: current_username,
         current_role: current_role,
-        question: current_question
+        current_question: current_question
     });
 });
 
-router.post("/editQuestion", async (req, res) => {
-    let {ev} = req.body;
-    let {name} = req.body;
-    let {id} = req.body;
+router.post("/editQuestion/:id", async (req, res) => {
+    let id = req.params.id;
+    let{text} = req.body;
+    let{correct_answer} = req.body;
+    let{wrong_answer1} = req.body;
+    let{wrong_answer2} = req.body;
+    let{score} = req.body;
 
-    if (name===""||ev===""||van_e_osztaly){
-        res.redirect("/classData");
-    }else{
-        await new OsztalyDAO().editOsztaly(id,ev,name);
-        res.redirect("/classData");
-    }
+
+    await new QuestionsDAO().updateQuestion(id, text, score, correct_answer, wrong_answer1, wrong_answer2);
+    res.redirect('/questions');
+
 });
+
+router.post("/deleteQuestion/:id", async (req, res) => {
+    let id = req.params.id;
+    await new QuestionsDAO().deleteQuestion(id);
+    res.redirect('/questions');
+});
+
+
 //#end-region
 
 //#test-region
