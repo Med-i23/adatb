@@ -1,0 +1,42 @@
+Relációs séma
+
+Felhasználó(id, név, felhasználónév, jelszó, loggedin)
+Teszt(id, név, létrehozásdátum, minpont)
+Kitöltés(id, dátum, pontszám)
+Válaszok(id, szöveg, jó/rossz)
+Kérdés(id, szöveg, jó_válasz, rossz_válasz1, rossz_válasz2, pontszám)
+
+Létrehoz(Felhasználó.id, Teszt.id)
+Bead(Felhasználó.id, Kitöltések.id)
+Kiválaszt(Teszt.id, Kérdés.id)
+Válaszolt(Kérdés.id, Válasz.id)
+
+----------------------------------------------------------------------------------------------------------------
+Összeolvasztás:
+Felhasználó(-id-, név, felhasználónév, jelszó, loggedin)
+Teszt(-id-, /léterhozó_id(Felhasználó.id)/, név, létrehozásdátum, minpont)
+Kitöltés(-id-, /teszt_id/, /kitöltő_id(Felhasználó.id)/, dátum, pontszám)
+Kérdés(-id-, /teszt.id/, szöveg, pontszám, jó_válasz, rossz_válasz1, rossz_válasz2)
+Válaszok(-id-, /kitöltés_id/, szöveg, jó/rossz)
+
+----------------------------------------------------------------------------------------------------------------
+1NF: A séma 1NF-ben van mert csak atomi elemek vannak benne
+Felhasználó(-id-, név, felhasználónév, jelszó, loggedin)
+Teszt(-id-, /léterhozó_id(Felhasználó.id)/, név, létrehozásdátum, minpont)
+Kitöltés(-id-, /teszt_id/, /kitöltő_id(Felhasználó.id)/, dátum, pontszám)
+Kérdés(-id-, /teszt.id/, szöveg, pontszám, jó_válasz, rossz_válasz1, rossz_válasz2)
+Válaszok(-id-, /kitöltés_id/, szöveg, jó/rossz)
+
+2NF: A séma 2NF-ben van mert minden másodlagos attirbútum teljesen függ bármely kulcstól
+Felhasználó(-id-, név, felhasználónév, jelszó, loggedin)
+Teszt(-id-, /léterhozó_id(Felhasználó.id)/, név, létrehozásdátum, minpont)
+Kitöltés(-id-, /teszt_id/, /kitöltő_id(Felhasználó.id)/, dátum, pontszám)
+Kérdés(-id-, /teszt.id/, szöveg, pontszám, jó_válasz, rossz_válasz1, rossz_válasz2)
+Válaszok(-id-, /kitöltés_id/, szöveg, jó/rossz)
+
+3NF: A séma 3NF-ben van mert minden másodlagos attirbútum közvetlenül függ bármely kulcstól
+Felhasználó(-id-, név, felhasználónév, jelszó, loggedin)
+Teszt(-id-, /léterhozó_id(Felhasználó.id)/, név, létrehozásdátum, minpont)
+Kitöltés(-id-, /teszt_id/, /kitöltő_id(Felhasználó.id)/, dátum, pontszám)
+Kérdés(-id-, /teszt.id/, szöveg, pontszám, jó_válasz, rossz_válasz1, rossz_válasz2)
+Válaszok(-id-, /kitöltés_id/, szöveg, jó/rossz)
