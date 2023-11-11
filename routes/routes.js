@@ -2,6 +2,8 @@ const express = require("express");
 const UsersDAO = require('../dao/users-dao');
 const QuestionsDAO = require('../dao/questions-dao');
 const TestsDAO = require('../dao/tests-dao');
+const CompletionDAO = require('../dao/completions-dao');
+const Answers = require('../dao/answers-dao');
 //többi dao ide jön
 
 const jwt = require('jsonwebtoken')
@@ -313,7 +315,7 @@ router.post("/deleteTest/:id", async (req, res) => {
 router.get("/doTest/:id", async (req, res) => {
     const token = req.cookies.jwt;
     let date = new Date();
-    let id = req.params.id;
+    let test_id = req.params.id;
     let current_role;
     let current_username;
     let current_id;
@@ -325,11 +327,13 @@ router.get("/doTest/:id", async (req, res) => {
         });
     }
 
-    let test = await new TestsDAO().getTestById(id);
-    let questions = await new QuestionsDAO().getQuestionsByTestId(id);
+    let test = await new TestsDAO().getTestById(test_id);
+    let questions = await new QuestionsDAO().getQuestionsByTestId(test_id);
+
+    await new CompletionDAO().createCompletion(test_id, current_id, date, 0);
 
     return res.render('test', {
-        id: id,
+        id: test_id,
         date: date,
         current_username: current_username,
         current_role: current_role,
@@ -342,6 +346,7 @@ router.get("/doTest/:id", async (req, res) => {
 
 router.post("/giveInTest/:id", async (req, res) => {
     const token = req.cookies.jwt;
+    let test_id = req.params.id;
     let current_id;
     let current_role;
     let current_username;
@@ -353,19 +358,19 @@ router.post("/giveInTest/:id", async (req, res) => {
         });
     }
 
-    let is_there = await new TestsDAO().getTestName(name);
-    if(is_there){
-        return res.render('createTest', {
-            current_id: current_id,
-            current_username: current_username,
-            current_role: current_role,
-            message: "Name Already Exists"
-        });
+    let questions = await new QuestionsDAO().getQuestionsByTestId(test_id);
+    let lastid = await new CompletionDAO().getLastCompletionId();
+    const data = req.body;
+
+    for (let i = 0; i < questions.length; i++) {
+        const questionText = data.questions[i].text;
+        const selectedOption = data.options[i];
+        const correctIncorrect = selectedOption === 'correct_answer' ? 'correct' : 'incorrect';
+
+        await new Answers().createAnswer(lastid, "nemyo", correctIncorrect);
     }
-    else{
-        await new TestsDAO().createTest(current_id, name, date, minpoint, noq);
-        return res.redirect("/tests");
-    }
+
+
 
 
 });
