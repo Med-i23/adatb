@@ -1,13 +1,15 @@
 const express = require("express");
+const bcrypt = require("bcrypt");
 const UsersDAO = require('../dao/users-dao');
 const QuestionsDAO = require('../dao/questions-dao');
 const TestsDAO = require('../dao/tests-dao');
 const CompletionDAO = require('../dao/completions-dao');
-const Answers = require('../dao/answers-dao');
+const AnswersDAO = require('../dao/answers-dao');
 //többi dao ide jön
 
 const jwt = require('jsonwebtoken')
 const jwtSecret = require("./../config/auth.js");
+const {options} = require("pg/lib/defaults");
 const router = express.Router();
 
 //main region
@@ -46,30 +48,32 @@ router.post("/login", async(req, res) => {
     const user = await new UsersDAO().getUsersByUserName(username);
 
     if (user){
-        if (password===user.password){
-            const token = jwt.sign({
-                    user:user,
-                    id: user.id,
-                    name: user.name,
-                    username: user.username,
-                    role: user.role
-                },
-                jwtSecret.jwtSecret
-            );
-            res.cookie("jwt", token, {
-                httpOnly: true
-            });
-            return res.redirect('/main');
+        bcrypt.compare(password, user.password).then(function(result) {
+            if (result) {
+                const token = jwt.sign({
+                        user:user,
+                        id: user.id,
+                        name: user.name,
+                        username: user.username,
+                        role: user.role
+                    },
+                    jwtSecret.jwtSecret
+                );
+                res.cookie("jwt", token, {
+                    httpOnly: true
+                });
+                return res.redirect('/main')
+            } else {
+                return res.render('index', {
+                    current_role: null,
+                    token: null,
+                    hibaLogin:"Nem jó a jelszó.",
+                    hibaRegister:null
+                });
 
-        }else {
-            return res.render('index', {
-                current_role: null,
-                token: null,
-                hibaLogin:"Nem jó a jelszó.",
-                hibaRegister:null
-            });
+            }
+        });
 
-        }
     }else {
         return res.render('index', {
             current_role: null,
@@ -119,7 +123,10 @@ router.post("/register", async(req, res) => {
         });
 
     }
-    await new UsersDAO().createUsers(name, username, password, "ROLE_STUDENT");
+
+    bcrypt.hash(password, 10).then(async (hash) => {
+        await new UsersDAO().createUsers(name, username, hash, "ROLE_STUDENT");
+    });
     return res.render('index', {
         current_role: null,
         token: null,
@@ -330,7 +337,7 @@ router.get("/doTest/:id", async (req, res) => {
     let test = await new TestsDAO().getTestById(test_id);
     let questions = await new QuestionsDAO().getQuestionsByTestId(test_id);
 
-    await new CompletionDAO().createCompletion(test_id, current_id, date, 0);
+    await new CompletionDAO().createCompletion(test_id, current_id, date);
 
     return res.render('test', {
         id: test_id,
@@ -346,35 +353,51 @@ router.get("/doTest/:id", async (req, res) => {
 
 router.post("/giveInTest/:id", async (req, res) => {
     const token = req.cookies.jwt;
-    let test_id = req.params.id;
-    let current_id;
+    const test_id = req.params.id;
     let current_role;
     let current_username;
+    let current_id;
     if (token) {
         jwt.verify(token, jwtSecret.jwtSecret, (err, decodedToken) => {
-            current_id = decodedToken.id;
             current_username = decodedToken.username;
             current_role = decodedToken.role;
+            current_id = decodedToken.id;
         });
     }
 
-    let questions = await new QuestionsDAO().getQuestionsByTestId(test_id);
-    let lastid = await new CompletionDAO().getLastCompletionId();
-    const data = req.body;
+    const questions = await new QuestionsDAO().getQuestionsByTestId(test_id);
+    const {current_completion} = await new CompletionDAO().getLastCompletionOfUserById(current_id);
+    let score = 0;
+    let all_score = 0;
+    let current_answer;
+    let correct_incorrect;
 
     for (let i = 0; i < questions.length; i++) {
-        const questionText = data.questions[i].text;
-        const selectedOption = data.options[i];
-        const correctIncorrect = selectedOption === 'correct_answer' ? 'correct' : 'incorrect';
-
-        await new Answers().createAnswer(lastid, "nemyo", correctIncorrect);
-        ////////////////////////////////////////////////!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        const selectedOption = req.body['options[]'][i];
+        console.log(selectedOption);
+        if (selectedOption === 'correct_answer') {
+            current_answer = questions[i].correct_answer;
+            score = questions[i].score;
+            correct_incorrect = 'correct';
+        }
+        if(selectedOption === 'wrong_answer1'){
+            current_answer = questions[i].wrong_answer1;
+            score = 0;
+            correct_incorrect = 'incorrect';
+        }
+        if(selectedOption === 'wrong_answer2'){
+            current_answer = questions[i].wrong_answer2;
+            score = 0;
+            correct_incorrect = 'incorrect';
+        }
+        await new AnswersDAO().createAnswer(current_completion, current_answer, correct_incorrect, score);
+        all_score += score;
     }
 
-
-
-
+    await new CompletionDAO().updateCompletionScore(all_score, current_completion);
+    return res.redirect("/tests");
 });
+
 
 
 router.get("/createTest", async (req, res) => {
