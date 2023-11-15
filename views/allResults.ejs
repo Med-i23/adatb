@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('assets/head') %>
+</head>
+<header>
+    <%- include('assets/header') %>
+</header>
+<body>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>User</th>
+            <th>Score</th>
+            <th>Date</th>
+            <th>Answers</th>
+        </tr>
+        </thead>
+        <tbody>
+            <%for (var i = 0; i < completions.length; i++){%>
+                <tr>
+                    <td><%= %></td>
+                    <td>95</td>
+                    <td>2023-11-15</td>
+                </tr>
+            <% }%>
+        </tbody>
+    </table>
+
+</body>
+</html>

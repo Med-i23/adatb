@@ -22,6 +22,20 @@ class CompletionsDao{
         return results[0][0];
     }
 
+    async getCompletionsOfUserById(completer_id){
+        const connection = await mysql.createConnection({host:'localhost',user:'root',database:'moodletest'});
+        const [results, query]= await connection.execute('SELECT * FROM completion WHERE completer_id=?', [completer_id]);
+        connection.end();
+        return results;
+    }
+
+    async getCompletionsByTestId(test_id){
+        const connection = await mysql.createConnection({host:'localhost',user:'root',database:'moodletest'});
+        const [results, query]= await connection.execute('SELECT * FROM completion WHERE test_id=?', [test_id]);
+        connection.end();
+        return results;
+    }
+
 }
 
 module.exports = CompletionsDao;

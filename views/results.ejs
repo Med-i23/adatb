@@ -7,6 +7,13 @@
     <%- include('assets/header') %>
 </header>
 <body>
-result
+your results.
+
+
+<%if (current_role==="ROLE_ADMIN" || current_role==="ROLE_TEACHER"){ %>
+    <div>
+        <a href="/allResults">All student results</a>
+    </div>
+<% } %>
 </body>
 </html>

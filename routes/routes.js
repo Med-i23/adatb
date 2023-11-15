@@ -374,7 +374,6 @@ router.post("/giveInTest/:id", async (req, res) => {
 
     for (let i = 0; i < questions.length; i++) {
         const selectedOption = req.body['options[]'][i];
-        console.log(selectedOption);
         if (selectedOption === 'correct_answer') {
             current_answer = questions[i].correct_answer;
             score = questions[i].score;
@@ -571,6 +570,56 @@ router.get("/results", async(req, res) => {
             current_id = decodedToken.id;
         });
     }
+
+    return res.render('results', {
+        current_username: current_username,
+        current_role: current_role,
+        current_id: current_id
+    });
+
+});
+
+router.get("/allResults/:id", async(req, res) => {
+    const token = req.cookies.jwt;
+    const id = req.params.id;
+    let current_id;
+    let current_role;
+    let current_username;
+    if (token) {
+        jwt.verify(token, jwtSecret.jwtSecret, (err, decodedToken) => {
+            current_username = decodedToken.username;
+            current_role = decodedToken.role;
+            current_id = decodedToken.id;
+        });
+    }
+
+    let test = await new TestsDAO().getTestById(id);
+    let completions = await new CompletionDAO().getCompletionsByTestId(id);
+
+    return res.render('results', {
+        current_username: current_username,
+        current_role: current_role,
+        current_id: current_id,
+        test: test,
+        completions: completions
+    });
+
+});
+
+router.get("/userResult/:id", async(req, res) => {
+    const token = req.cookies.jwt;
+    const id = req.params.id;
+    let current_id;
+    let current_role;
+    let current_username;
+    if (token) {
+        jwt.verify(token, jwtSecret.jwtSecret, (err, decodedToken) => {
+            current_username = decodedToken.username;
+            current_role = decodedToken.role;
+            current_id = decodedToken.id;
+        });
+    }
+
 
     return res.render('results', {
         current_username: current_username,

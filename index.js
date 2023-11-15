@@ -16,5 +16,5 @@ app.use('/js', express.static(path.join(__dirname, 'node_modules/jquery/dist')))
 
 
 app.listen(PORT, () => {
-    console.log("Sikeres elindítás");
+    console.log("Start successfull!");
 });
