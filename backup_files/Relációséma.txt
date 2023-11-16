@@ -13,11 +13,11 @@ Válaszolt(Kérdés.id, Válasz.id)
 
 ----------------------------------------------------------------------------------------------------------------
 Összeolvasztás:
-Felhasználó(-id-, név, felhasználónév, jelszó, loggedin)
-Teszt(-id-, /léterhozó_id(Felhasználó.id)/, név, létrehozásdátum, minpont)
-Kitöltés(-id-, /teszt_id/, /kitöltő_id(Felhasználó.id)/, dátum, pontszám)
+Felhasználó(-id-, név, felhasználónév, jelszó, szerep, loggedin)
+Teszt(-id-, /léterhozó_id(Felhasználó.id)/, név, létrehozásdátum, minpont, kérdésszám)
+Kitöltés(-id-, /teszt_id/, /kitöltő_id(Felhasználó.id)/, dátum, összpontszám)
 Kérdés(-id-, /teszt.id/, szöveg, pontszám, jó_válasz, rossz_válasz1, rossz_válasz2)
-Válaszok(-id-, /kitöltés_id/, szöveg, jó/rossz)
+Válaszok(-id-, /kitöltés_id/, szöveg, jó/rossz, pontszám)
 
 ----------------------------------------------------------------------------------------------------------------
 1NF: A séma 1NF-ben van mert csak atomi elemek vannak benne

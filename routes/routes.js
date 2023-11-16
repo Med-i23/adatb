@@ -5,6 +5,7 @@ const QuestionsDAO = require('../dao/questions-dao');
 const TestsDAO = require('../dao/tests-dao');
 const CompletionDAO = require('../dao/completions-dao');
 const AnswersDAO = require('../dao/answers-dao');
+const AnsweroptionsDAO = require('../dao/answeroptions-dao');
 //többi dao ide jön
 
 const jwt = require('jsonwebtoken')
@@ -503,18 +504,25 @@ router.post("/updateTestQ/:id", async (req, res) => {
     const {noq} = await new TestsDAO().getTestNoq(test_id);
     const {number} = await new QuestionsDAO().getNumberOfQuestionsByTestID(test_id);
 
-    let tests = await new TestsDAO().getTests();
-
     if(noq > number){
-        await new QuestionsDAO().createQuestion(test_id, question, score, correct_answer, wrong_answer1, wrong_answer2);
+        await new QuestionsDAO().createQuestion(test_id, question, score);
+
+        let lastQid = await new QuestionsDAO().lastQuestionId();
+    console.log(lastQid);
+        await new AnsweroptionsDAO().createAnsweroption(lastQid, correct_answer, 1);
+        await new AnsweroptionsDAO().createAnsweroption(lastQid, wrong_answer1, 0);
+        await new AnsweroptionsDAO().createAnsweroption(lastQid, wrong_answer2, 0);
+
         return res.redirect("/tests");
     }
     else {
+        let tests = await new TestsDAO().getTests();
+
         return res.render('tests', {
             current_role: current_role,
             current_id: current_id,
             current_username: current_username,
-            message: "Nem yo!",
+            message: "Maximum question capacity",
             all_test: tests
         });
     }
@@ -624,7 +632,9 @@ router.get("/userResult/:id", async(req, res) => {
     return res.render('results', {
         current_username: current_username,
         current_role: current_role,
-        current_id: current_id
+        current_id: current_id,
+        test: test,
+        completions: completions
     });
 
 });

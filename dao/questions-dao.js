@@ -3,9 +3,16 @@ const mysql = require('mysql2/promise');
 class QuestionsDao{
     async createQuestion(test_id, text, score, correct_answer, wrong_answer1, wrong_answer2){
         const connection = await mysql.createConnection({host:'localhost',user:'root',database:'moodletest'})
-        await connection.query('INSERT INTO question (test_id, text, score, correct_answer, wrong_answer1, wrong_answer2) VALUES (?, ?, ?, ?, ?, ?)', [test_id, text, score, correct_answer, wrong_answer1, wrong_answer2]);
+        await connection.query('INSERT INTO question (test_id, text, score) VALUES (?, ?, ?)', [test_id, text, score]);
         connection.end();
         return;
+    }
+
+    async lastQuestionId(){
+        const connection = await mysql.createConnection({host:'localhost',user:'root',database:'moodletest'});
+        const results = await connection.execute('SELECT id FROM question ORDER BY id DESC LIMIT 1');
+        connection.end();
+        return results[0][0];
     }
 
     async updateQuestion(id, text, score, correct_answer, wrong_answer1, wrong_answer2){
