@@ -23,7 +23,12 @@ class UsersDAO {
     };
 
 
-
+    async changeUserLoggedin(username) {
+        const connection = await mysql.createConnection({host:'localhost',user:'root',database:'moodletest'});
+        await connection.query('UPDATE user SET loggedin=!loggedin WHERE username=?', [username]);
+        connection.end();
+        return;
+    };
 }
 
 module.exports = UsersDAO;

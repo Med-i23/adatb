@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('assets/head') %>
+
+</head>
+<header>
+    <%- include('assets/header') %>
+</header>
+<body>
+
+<div class="tests">
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Date</th>
+            <th>Minimum Point</th>
+            <th>Score</th>
+            <th>Answers</th>
+        </tr>
+        </thead>
+        <tbody>
+        <%for (var i = 0; i < user_completions.length; i++){%>
+            <tr <%if(user_completions[i].score >= user_completions[i].minpoint){ %>style="background-color: rgba(0,157,0,0.87); color: white" <%}%>>
+                <td><%= user_completions[i].creationdate%></td>
+                <td><%= user_completions[i].minpoint%></td>
+                <td><%= user_completions[i].score%></td>
+                <td><a href="/userAnswers/<%= id_list[i].id%>" class="linkbuttons" style="float: left">Answers</a></td>
+            </tr>
+        <% } %>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

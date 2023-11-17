@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('assets/head') %>
+</head>
+<header>
+    <%- include('assets/header') %>
+</header>
+<body>
+
+<div class="tests">
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Answers</th>
+            <th>Score</th>
+        </tr>
+        </thead>
+        <tbody>
+        <%for (var i = 0; i < answers.length; i++){%>
+        <tr <%if(answers[i].correct_incorrect === 'correct'){ %>style="background-color: rgba(0,157,0,0.87); color: white"><%} else{%>style="background-color: red; color: white"> <%}%>
+            <td><%= answers[i].text%></td>
+            <td><%= answers[i].score%></td>
+        </tr>
+        <% } %>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

@@ -1,19 +1,80 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .tests{
+            display: grid;
+        }
+
+        .card {
+            width: 300px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 20px;
+            margin: 20px;
+            background-color: #f9f9f9;
+            box-shadow: 2px 2px 5px #888888;
+        }
+
+        .question {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .linkbuttons{
+            display: inline-block;
+            padding: 5px 10px;
+            margin-top: 10px;
+            text-decoration: none;
+            background-color: #007bff;
+            color: white;
+            border: 1px solid black;
+            transition: background-color 0.3s;
+            float: right;
+        }
+
+        .linkbuttons:hover {
+            background-color: #0055ad;
+            border: 1px solid black;
+        }
+
+    </style>
     <%- include('assets/head') %>
 </head>
 <header>
     <%- include('assets/header') %>
 </header>
 <body>
-your results.
+<div class="tests">
+    <% for (var i = 0; i < all_test.length; i++) {
+        let passed = false;
+        for(var j = 0; j < passedTests.length; j++){
+            if(all_test[i].name === passedTests[j].name){
+                passed = true;
+                break;
+            }
+        }
+    %>
+    <div class="card" <% if(passed === true){ %> style="background-color: #029802; color: white"<% } %>>
+        <div class="question"><%= all_test[i].name%></div>
 
-
-<%if (current_role==="ROLE_ADMIN" || current_role==="ROLE_TEACHER"){ %>
-    <div>
-        <a href="/allResults">All student results</a>
+        <% if(passed === true){ %> <div>Passed!</div> <% } %>
+        <div>
+            <a href="/userResult/<%= all_test[i].id%>" class="linkbuttons">Your results</a>
+        </div>
+        <%if (current_role==="ROLE_ADMIN" || current_role==="ROLE_TEACHER"){ %>
+            <a href="/allResults/<%= all_test[i].id%>" class="linkbuttons">Student Results</a>
+        <%}%>
     </div>
-<% } %>
+    <%}%>
+</div>
+
 </body>
 </html>

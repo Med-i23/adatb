@@ -13,6 +13,24 @@
         padding: 0;
     }
 
+    .linkbuttons{
+        display: inline-block;
+        padding: 5px 10px;
+        text-decoration: none;
+        background-color: #007bff;
+        color: white;
+        border: 1px solid black;
+        transition: background-color 0.3s;
+        float: right;
+    }
+
+
+    /* Hover effect */
+    .linkbuttons:hover {
+        background-color: #0055ad;
+        border: 1px solid black;
+    }
+
 
     /* nav section */
     .topnav {
@@ -119,6 +137,34 @@
         width: 60%;
         margin-left: 2%;
         width: 150px;
+    }
+
+    /* Tables */
+    table {
+        border-collapse: collapse;
+        width: 100%;
+        margin-bottom: 20px;
+    }
+
+    th {
+        background-color: #333;
+        color: white;
+        font-weight: bold;
+        padding: 10px;
+        text-align: left;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    td {
+        padding: 10px;
+        border-bottom: 1px solid #ddd;
+    }
+    tr:hover td.link {
+        background-color: #34495e; /* Dark gray */
+        color: white;
     }
 
 </style>

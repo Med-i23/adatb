@@ -23,6 +23,21 @@
             margin-top: 10px;
             font-size: 16px;
         }
+
+        .createquestion{
+            display: inline-block;
+            padding: 5px 10px;
+            margin: 25px 0px 10px 22px;
+            text-decoration: none;
+            background-color: #007bff; /* Green background color */
+            color: white; /* White text color */
+            border: 1px solid black; /* Green border */
+            transition: background-color 0.3s;
+        }
+        .createquestion:hover {
+            background-color: #0055ad; /* Darker green on hover */
+            border: 1px solid black; /* Darker green border on hover */
+        }
     </style>
     <%- include('assets/head')%>
 </head>
@@ -31,12 +46,25 @@
     <%- include('assets/header')%>
 </header>
 <body>
-<a href="/createQuestions">Create Questions</a>
+
+<% if(confirm_message){ %>
+    <p class="confirm"><%- confirm_message%></p>
+<% }%>
+
+
+<div >
+<a href="/createQuestions" class="createquestion">Create Questions</a>
+</div>
+<div style="alignment: center">
     <%for (var i = 0; i < all_questions.length; i++) {%>
         <div class="card">
+            <div style="font-size: 12pt"><%= names[i].name%></div>
             <div class="question"><%= all_questions[i].text%></div>
-            <a href="/updateQuestion/<%= all_questions[i].id%>">edit</a>
+            <div>
+            <a href="/updateQuestion/<%= all_questions[i].id%>" class="linkbuttons">edit</a>
+            </div>
         </div>
     <%}%>
+</div>
 </body>
 </html>

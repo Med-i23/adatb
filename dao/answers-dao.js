@@ -8,6 +8,13 @@ class AnswersDao{
         return;
     }
 
+    async getAnswersOfCompletions(completion_id){
+        const connection = await mysql.createConnection({host:'localhost',user:'root',database:'moodletest'});
+        const [results, query]= await connection.execute('SELECT * FROM answers WHERE completion_id=?', [completion_id]);
+        connection.end();
+        return results;
+    }
+
 }
 
 module.exports = AnswersDao;

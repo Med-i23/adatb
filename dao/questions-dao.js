@@ -22,7 +22,6 @@ class QuestionsDao{
         return;
     };
 
-
     async getTestIdByQuestionId(id){
         const connection = await mysql.createConnection({host:'localhost',user:'root',database:'moodletest'});
         const results= await connection.execute('SELECT test_id FROM question WHERE id=?', [id]);
@@ -68,9 +67,16 @@ class QuestionsDao{
 
     async asignTestToQuestion(test_id, text){
         const connection = await mysql.createConnection({host:'localhost',user:'root',database:'moodletest'})
-        await connection.query('UPDATE question SET test_id=? WHERE text=?', [test_id, text])
+        await connection.query('UPDATE question SET test_id=? WHERE text=? AND test_id=NULL', [test_id, text])
         connection.end();
         return;
+    }
+
+    async getTestNames(){
+        const connection = await mysql.createConnection({host:'localhost',user:'root',database:'moodletest'})
+        const [results,query]= await connection.execute('SELECT name FROM `question` JOIN test ON question.test_id = test.id');
+        connection.end();
+        return results;
     }
 
 }
