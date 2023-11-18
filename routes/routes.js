@@ -1,15 +1,14 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
+
 const UsersDAO = require('../dao/users-dao');
 const QuestionsDAO = require('../dao/questions-dao');
 const TestsDAO = require('../dao/tests-dao');
 const CompletionDAO = require('../dao/completions-dao');
 const AnswersDAO = require('../dao/answers-dao');
-//többi dao ide jön
 
 const jwt = require('jsonwebtoken')
 const jwtSecret = require("./../config/auth.js");
-const {options} = require("pg/lib/defaults");
 const router = express.Router();
 
 //main region
@@ -67,7 +66,6 @@ router.get("/main", async (req, res) => {
 router.post("/login", async(req, res) => {
     let {username} = req.body;
     let {password} = req.body;
-
 
     const user = await new UsersDAO().getUsersByUserName(username);
 
@@ -166,8 +164,122 @@ router.post("/register", async(req, res) => {
         hibaRegister:null
     });
 
+});
 
+router.get("/userManager", async(req, res) => {
+    const token = req.cookies.jwt;
+    let current_id;
+    let current_role;
+    let current_username;
+    let current_name;
+    if (token) {
+        jwt.verify(token, jwtSecret.jwtSecret, (err, decodedToken) => {
+            current_username = decodedToken.username;
+            current_role = decodedToken.role;
+            current_name= decodedToken.name;
+            current_id = decodedToken.id;
+        });
+    }
 
+    let users = await new UsersDAO().getUsers();
+
+    return res.render('userManager', {
+        current_username: current_username,
+        current_role: current_role,
+        current_id: current_id,
+        current_name: current_name,
+        users: users,
+        confirm_message: null
+    });
+
+});
+
+router.get("/userModify/:id", async(req, res) => {
+    const token = req.cookies.jwt;
+    const id = req.params.id;
+    let current_id;
+    let current_role;
+    let current_username;
+    let current_name;
+    if (token) {
+        jwt.verify(token, jwtSecret.jwtSecret, (err, decodedToken) => {
+            current_username = decodedToken.username;
+            current_role = decodedToken.role;
+            current_id = decodedToken.id;
+            current_name = decodedToken.name;
+        });
+    }
+
+    let user = await new UsersDAO().getUsersById(id);
+
+    return res.render('userModify', {
+        current_username: current_username,
+        current_role: current_role,
+        current_id: current_id,
+        current_name: current_name,
+        user: user
+    });
+
+});
+
+router.post("/userModify/:id", async(req, res) => {
+    const token = req.cookies.jwt;
+    let {role} = req.body;
+    let id = req.params.id;
+    let current_id;
+    let current_role;
+    let current_username;
+    let current_name;
+    if (token) {
+        jwt.verify(token, jwtSecret.jwtSecret, (err, decodedToken) => {
+            current_username = decodedToken.username;
+            current_role = decodedToken.role;
+            current_id = decodedToken.id;
+            current_name = decodedToken.name;
+        });
+    }
+
+    await new UsersDAO().modifyUserRole(id, role);
+    let users = await new UsersDAO().getUsers();
+
+    return res.render('userManager', {
+        current_username: current_username,
+        current_role: current_role,
+        current_id: current_id,
+        users: users,
+        current_name: current_name,
+        confirm_message: "User role modified!"
+    });
+});
+
+router.post("/deleteUser/:id", async(req, res) => {
+    const token = req.cookies.jwt;
+    let id = req.params.id;
+    let current_id;
+    let current_role;
+    let current_username;
+    let current_name;
+    if (token) {
+        jwt.verify(token, jwtSecret.jwtSecret, (err, decodedToken) => {
+            current_username = decodedToken.username;
+            current_role = decodedToken.role;
+            current_id = decodedToken.id;
+            current_name = decodedToken.name;
+        });
+    }
+
+    await new UsersDAO().deleteUser(id);
+
+    let users = await new UsersDAO().getUsers();
+
+    return res.render('userManager', {
+        current_username: current_username,
+        current_role: current_role,
+        current_id: current_id,
+        users: users,
+        current_name: current_name,
+        confirm_message: "User deleted!"
+    });
 });
 
 
@@ -186,8 +298,8 @@ router.get("/questions", async (req, res) => {
             current_role = decodedToken.role;
         });
     }
-    let questions = await new QuestionsDAO().getQuestions();
 
+    let questions = await new QuestionsDAO().getQuestions();
     let names = await new QuestionsDAO().getTestNames();
 
     return res.render('questions', {
@@ -306,14 +418,15 @@ router.get("/tests", async (req, res) => {
         });
     }
     let tests = await new TestsDAO().getTests();
+    let count = await new QuestionsDAO().getQuestionCountOfAllTest();
 
     return res.render('tests', {
         current_username: current_username,
         current_role: current_role,
         all_test: tests,
+        count: count,
         confirm_message: null
     });
-
 });
 
 router.post("/deleteTest/:id", async (req, res) => {
@@ -381,8 +494,7 @@ router.post("/giveInTest/:id", async (req, res) => {
     }
 
     const questions = await new QuestionsDAO().getQuestionsByTestId(test_id);
-    console.log(questions[0]);
-    console.log(questions[1]);
+
     const {current_completion} = await new CompletionDAO().getLastCompletionOfUserById(current_id);
     let score = 0;
     let all_score = 0;
@@ -393,7 +505,6 @@ router.post("/giveInTest/:id", async (req, res) => {
 
     for (let i = 0; i < questions.length; i++) {
         const selectedOption = selectedOptions[i];
-        console.log(selectedOption);
         if (selectedOption === 'correct_answer') {
             current_answer = questions[i].correct_answer;
             score = questions[i].score;
@@ -622,8 +733,6 @@ router.get("/allResults/:id", async(req, res) => {
     let completer_names = await new CompletionDAO().getCompletionsFullNamesListByTestId(id);
     let id_list = await new CompletionDAO().getCompletionOfAllUserOnTestIdList(id);
 
-    console.log(all_completions[0]);
-    console.log(all_completions[1]);
     return res.render('allResults', {
         current_username: current_username,
         current_role: current_role,

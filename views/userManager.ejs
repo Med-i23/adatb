@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('assets/head') %>
+
+</head>
+<header>
+    <%- include('assets/header') %>
+</header>
+<body>
+
+<div class="tests">
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Full Name</th>
+            <th>username</th>
+            <th>Role</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <% if(confirm_message){ %>
+            <p class="confirm"><%- confirm_message%></p>
+        <% }%>
+
+        <%for (var i = 0; i < users.length; i++){%>
+        <tr>
+            <td><%= users[i].name%><% if(current_name === users[i].name){ %> (You)<%}%></td>
+            <td><%= users[i].username%></td>
+            <td><%= users[i].role%></td>
+            <td><a href="/userModify/<%= users[i].id%>" class="linkbuttons" style="float: left">Manage</a></td>
+        </tr>
+        <% } %>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

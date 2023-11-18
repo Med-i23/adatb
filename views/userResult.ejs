@@ -22,7 +22,7 @@
         </thead>
         <tbody>
         <%for (var i = 0; i < user_completions.length; i++){%>
-            <tr <%if(user_completions[i].score >= user_completions[i].minpoint){ %>style="background-color: rgba(0,157,0,0.87); color: white" <%}%>>
+             <tr <%if(user_completions[i].score >= user_completions[i].minpoint){ %>style="background-color: rgba(0,157,0,0.87); color: white"><%} else{%>style="background-color: red; color: white"> <%}%>
                 <td><%= user_completions[i].creationdate%></td>
                 <td><%= user_completions[i].minpoint%></td>
                 <td><%= user_completions[i].score%></td>

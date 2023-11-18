@@ -10,16 +10,9 @@
   <%- include('assets/header') %>
 </header>
 <body>
-<div>
-  Beginning: <%= date%>
-</div>
-<div>
-  User: <%= current_username%>
-</div>
 
 <div class="container">
 <form method="post" class="form-container" action="/giveInTest/<%= test.id%>">
-  <%= test.id%>
   <h1><%= test.name %></h1>
   <% for (var i = 0; i < questions.length; i++) { %>
     <div>

@@ -79,6 +79,13 @@ class QuestionsDao{
         return results;
     }
 
+    async getQuestionCountOfAllTest(){
+        const connection = await mysql.createConnection({host:'localhost',user:'root',database:'moodletest'})
+        const [results,query]= await connection.execute('SELECT COUNT(test_id) AS count FROM question GROUP BY test_id ORDER by test_id;');
+        connection.end();
+        return results;
+    }
+
 }
 
 module.exports = QuestionsDao;

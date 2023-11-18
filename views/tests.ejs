@@ -16,7 +16,7 @@
         }
 
         .card {
-            width: 300px;
+            width: 400px;
             border: 1px solid #ccc;
             border-radius: 5px;
             padding: 20px;
@@ -29,7 +29,6 @@
             font-size: 18px;
             font-weight: bold;
         }
-
 
         .createtest{
             display: inline-block;
@@ -70,9 +69,14 @@
             <div class="question"><%= all_test[i].name%></div>
             <div>Minimum point:</div>
             <div class="question"><%= all_test[i].minpoint%></div>
+            <div>Questions:</div>
+            <div>
+                <% const countObj = count[i]; %>
+                <%= countObj ? countObj.count : 0 %>/<%= all_test[i].noq %>
+            </div>
+            <div>
             <a href="/doTest/<%= all_test[i].id %>" class="linkbuttons">Fill</a>
             <%if (current_role==="ROLE_ADMIN" || current_role==="ROLE_TEACHER"){ %>
-            <div>
             <a href="/updateTest/<%= all_test[i].id%>" class="linkbuttons">Add/Edit</a>
             </div>
                 <a href="/allResults/<%= all_test[i].id%>" class="linkbuttons">Student Results</a>

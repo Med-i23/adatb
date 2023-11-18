@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <%- include('assets/head') %>
+
+</head>
+<header>
+    <%- include('assets/header') %>
+</header>
+
+
+<div class="container">
+    <form action="/userModify/<%= user.id%>" method="post" class="form-container">
+        <div>
+            Change Role:
+            <input type="text" id="question" name="role" value="<%= user.role%>" rows="4" cols="50" required>
+        </div>
+        <button type="submit">Change</button>
+    </form>
+    <form action="/deleteUser/<%= user.id%>" method="post" style="margin-left: 0px; padding-left: 1%">
+        <button class="btn-sm btn-dark details" style="background-color: red;" value="delete">Delete User</button>
+    </form>
+</div>
+</body>
+</html>
