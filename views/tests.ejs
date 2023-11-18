@@ -63,17 +63,20 @@
 </div>
 <% } %>
 
+
+<%for (var i = 0; i < all_test.length; i++) {%>
 <div class="tests">
-    <%for (var i = 0; i < all_test.length; i++) {%>
         <div class="card">
             <div class="question"><%= all_test[i].name%></div>
             <div>Minimum point:</div>
             <div class="question"><%= all_test[i].minpoint%></div>
+            <%if (current_role==="ROLE_ADMIN" || current_role==="ROLE_TEACHER"){ %>
             <div>Questions:</div>
             <div>
                 <% const countObj = count[i]; %>
                 <%= countObj ? countObj.count : 0 %>/<%= all_test[i].noq %>
             </div>
+            <% } %>
             <div>
             <a href="/doTest/<%= all_test[i].id %>" class="linkbuttons">Fill</a>
             <%if (current_role==="ROLE_ADMIN" || current_role==="ROLE_TEACHER"){ %>
@@ -82,7 +85,8 @@
                 <a href="/allResults/<%= all_test[i].id%>" class="linkbuttons">Student Results</a>
             <% } %>
         </div>
-    <%}%>
 </div>
+<%}%>
+
 </body>
 </html>

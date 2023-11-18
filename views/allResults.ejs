@@ -25,7 +25,7 @@
         <%for (var i = 0; i < all_completions.length; i++){%>
         <tr <%if(all_completions[i].score >= all_completions[i].minpoint){ %>style="background-color: rgba(0,157,0,0.87); color: white"><%} else{%>style="background-color: red; color: white"> <%}%>
             <td><%= completer_names[i].name%></td>
-            <td><%= all_completions[i].creationdate%></td>
+            <td><%= all_completions[i].date%></td>
             <td><%= all_completions[i].minpoint%></td>
             <td><%= all_completions[i].score%></td>
             <td><a href="/userAnswers/<%= id_list[i].id%>" class="linkbuttons" style="float: left">Answers</a></td>

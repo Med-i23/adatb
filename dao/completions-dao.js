@@ -58,7 +58,7 @@ class CompletionsDao{
     /*seperate id list for the answer listing by all users*/
     async getCompletionOfAllUserOnTestIdList(test_id){
         const connection = await mysql.createConnection({host:'localhost',user:'root',database:'moodletest'});
-        const [results, query] = await connection.execute('SELECT completion.id FROM completion JOIN user ON completion.completer_id=user.id JOIN test ON test.id = completion.test_id WHERE test_id=? ORDER BY user.username;', [test_id]);
+        const [results, query] = await connection.execute('SELECT completion.id FROM completion JOIN user ON completion.completer_id=user.id JOIN test ON test.id = completion.test_id WHERE test_id=? ORDER BY user.username', [test_id]);
         connection.end();
         return results;
     }
@@ -67,7 +67,7 @@ class CompletionsDao{
     /*getting the names of tests that the user passed*/
     async getAllCompletionOfUser(completer_id){
         const connection = await mysql.createConnection({host:'localhost',user:'root',database:'moodletest'});
-        const [results, query]= await connection.execute('SELECT * FROM completion JOIN test ON completion.test_id = test.id WHERE completer_id=9;', [completer_id]);
+        const [results, query]= await connection.execute('SELECT * FROM completion JOIN test ON completion.test_id = test.id WHERE completer_id=?;', [completer_id]);
         connection.end();
         return results;
     }

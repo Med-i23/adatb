@@ -24,20 +24,6 @@
             font-size: 16px;
         }
 
-        .createquestion{
-            display: inline-block;
-            padding: 5px 10px;
-            margin: 25px 0px 10px 22px;
-            text-decoration: none;
-            background-color: #007bff; /* Green background color */
-            color: white; /* White text color */
-            border: 1px solid black; /* Green border */
-            transition: background-color 0.3s;
-        }
-        .createquestion:hover {
-            background-color: #0055ad; /* Darker green on hover */
-            border: 1px solid black; /* Darker green border on hover */
-        }
     </style>
     <%- include('assets/head')%>
 </head>
@@ -51,10 +37,6 @@
     <p class="confirm"><%- confirm_message%></p>
 <% }%>
 
-
-<div >
-<a href="/createQuestions" class="createquestion">Create Questions</a>
-</div>
 <div style="alignment: center">
     <%for (var i = 0; i < all_questions.length; i++) {%>
         <div class="card">

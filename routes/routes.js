@@ -377,9 +377,6 @@ router.post("/editQuestion/:id", async (req, res) => {
 
 });
 
-
-
-
 router.post("/deleteQuestion/:id", async (req, res) => {
     const token = req.cookies.jwt;
     let id = req.params.id;
@@ -401,7 +398,7 @@ router.post("/deleteQuestion/:id", async (req, res) => {
         current_role: current_role,
         all_questions: questions,
         names: names,
-        confirm_message: "Question deleted Successfully"
+        confirm_message: "Question Deleted Successfully"
     });
 });
 //#end-region
@@ -568,8 +565,10 @@ router.post("/addTest", async (req, res) => {
             current_role = decodedToken.role;
         });
     }
-
+    let tests = await new TestsDAO().getTests();
+    let count = await new QuestionsDAO().getQuestionCountOfAllTest();
     let is_there = await new TestsDAO().getTestName(name);
+
     if(is_there){
         return res.render('createTest', {
             current_id: current_id,
@@ -580,9 +579,15 @@ router.post("/addTest", async (req, res) => {
     }
     else{
         await new TestsDAO().createTest(current_id, name, date, minpoint, noq);
-        return res.redirect("/tests");
+        return res.render('tests', {
+            current_role: current_role,
+            current_id: current_id,
+            current_username: current_username,
+            confirm_message: "Maximum message capacity!",
+            count: count,
+            all_test: tests
+        });
     }
-
 
 });
 
@@ -597,7 +602,6 @@ router.get("/updateTest/:id", async(req, res) => {
             current_role = decodedToken.role;
         });
     }
-
 
     let test = await new TestsDAO().getTestById(test_id);
 
@@ -637,14 +641,24 @@ router.post("/updateTestQ/:id", async (req, res) => {
 
     if(noq > number){
         await new QuestionsDAO().createQuestion(test_id, question, score, correct_answer, wrong_answer1, wrong_answer2);
-        return res.redirect("/tests");
+        let count = await new QuestionsDAO().getQuestionCountOfAllTest();
+        return res.render('tests', {
+            current_role: current_role,
+            current_id: current_id,
+            current_username: current_username,
+            confirm_message: "Question Added!",
+            count: count,
+            all_test: tests
+        });
     }
     else {
+        let count = await new QuestionsDAO().getQuestionCountOfAllTest();
         return res.render('tests', {
             current_role: current_role,
             current_id: current_id,
             current_username: current_username,
             confirm_message: "Maximum message capacity!",
+            count: count,
             all_test: tests
         });
     }
@@ -657,10 +671,12 @@ router.post("/changeTestName/:id", async (req, res) => {
     let {name} = req.body;
     let current_role;
     let current_username;
+    let current_id;
     if (token) {
         jwt.verify(token, jwtSecret.jwtSecret, (err, decodedToken) => {
             current_username = decodedToken.username;
             current_role = decodedToken.role;
+            current_id = decodedToken.id;
         });
     }
 
@@ -679,7 +695,16 @@ router.post("/changeTestName/:id", async (req, res) => {
     }
     else{
         await new TestsDAO().changeTestName(id, name);
-        return res.redirect("/tests");
+        let tests = await new TestsDAO().getTests();
+        let count = await new QuestionsDAO().getQuestionCountOfAllTest();
+        return res.render('tests', {
+            current_role: current_role,
+            current_id: current_id,
+            current_username: current_username,
+            confirm_message: "Name Changed!",
+            count: count,
+            all_test: tests
+        });
     }
 
 
