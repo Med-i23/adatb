@@ -19,6 +19,7 @@
 
 <div class="container">
 <form method="post" class="form-container" action="/giveInTest/<%= test.id%>">
+  <%= test.id%>
   <h1><%= test.name %></h1>
   <% for (var i = 0; i < questions.length; i++) { %>
     <div>

@@ -38,6 +38,32 @@ router.get("/", async (req, res) => {
     });
 });
 
+router.get("/main", async (req, res) => {
+    const token = req.cookies.jwt;
+    let current_username;
+    let current_role;
+    let current_id;
+    let current_name;
+    if (token) {
+        jwt.verify(token, jwtSecret.jwtSecret, (err, decodedToken) => {
+            current_username = decodedToken.username;
+            current_name= decodedToken.name;
+            current_role = decodedToken.role;
+            current_id = decodedToken.id;
+        });
+    }
+
+
+    return res.render('main', {
+        current_username: current_username,
+        current_name:current_name,
+        current_role: current_role,
+        current_id: current_id,
+    });
+});
+
+//#region-users
+
 router.post("/login", async(req, res) => {
     let {username} = req.body;
     let {password} = req.body;
@@ -81,8 +107,6 @@ router.post("/login", async(req, res) => {
             hibaRegister:null
         });
     }
-
-
 });
 
 router.get("/logout", async(req, res) => {
@@ -146,29 +170,7 @@ router.post("/register", async(req, res) => {
 
 });
 
-router.get("/main", async (req, res) => {
-    const token = req.cookies.jwt;
-    let current_username;
-    let current_role;
-    let current_id;
-    let current_name;
-    if (token) {
-        jwt.verify(token, jwtSecret.jwtSecret, (err, decodedToken) => {
-            current_username = decodedToken.username;
-            current_name= decodedToken.name;
-            current_role = decodedToken.role;
-            current_id = decodedToken.id;
-        });
-    }
 
-
-    return res.render('main', {
-        current_username: current_username,
-        current_name:current_name,
-        current_role: current_role,
-        current_id: current_id,
-    });
-});
 //#endregion
 
 
@@ -280,17 +282,16 @@ router.post("/deleteQuestion/:id", async (req, res) => {
 
     await new QuestionsDAO().deleteQuestion(id);
     let questions = await new QuestionsDAO().getQuestions();
+    let names = await new QuestionsDAO().getTestNames();
 
     return res.render('questions', {
         current_username: current_username,
         current_role: current_role,
         all_questions: questions,
+        names: names,
         confirm_message: "Question deleted Successfully"
     });
 });
-
-
-
 //#end-region
 
 //#test-region
@@ -380,14 +381,19 @@ router.post("/giveInTest/:id", async (req, res) => {
     }
 
     const questions = await new QuestionsDAO().getQuestionsByTestId(test_id);
+    console.log(questions[0]);
+    console.log(questions[1]);
     const {current_completion} = await new CompletionDAO().getLastCompletionOfUserById(current_id);
     let score = 0;
     let all_score = 0;
     let current_answer;
     let correct_incorrect;
 
+    const selectedOptions = Array.isArray(req.body['options[]']) ? req.body['options[]'] : [req.body['options[]']];
+
     for (let i = 0; i < questions.length; i++) {
-        const selectedOption = req.body['options[]'][i];
+        const selectedOption = selectedOptions[i];
+        console.log(selectedOption);
         if (selectedOption === 'correct_answer') {
             current_answer = questions[i].correct_answer;
             score = questions[i].score;
@@ -527,7 +533,7 @@ router.post("/updateTestQ/:id", async (req, res) => {
             current_role: current_role,
             current_id: current_id,
             current_username: current_username,
-            message: "Maximum message capacity!",
+            confirm_message: "Maximum message capacity!",
             all_test: tests
         });
     }
@@ -585,14 +591,14 @@ router.get("/results", async(req, res) => {
     }
 
     let tests = await new TestsDAO().getTests();
-    const passedTests = await new CompletionDAO().passedTestsOfUser(current_id);
+    const completions = await new CompletionDAO().getAllCompletionOfUser(current_id);
 
     return res.render('results', {
         current_username: current_username,
         current_role: current_role,
         current_id: current_id,
         all_test: tests,
-        passedTests: passedTests
+        completions: completions
     });
 
 });
@@ -611,15 +617,20 @@ router.get("/allResults/:id", async(req, res) => {
         });
     }
 
-    let test = await new TestsDAO().getTestById(id);
-    let all_completions = await new CompletionDAO().getCompletionsByTestId(id);
 
+    let all_completions = await new CompletionDAO().getCompletionsByTestId(id);
+    let completer_names = await new CompletionDAO().getCompletionsFullNamesListByTestId(id);
+    let id_list = await new CompletionDAO().getCompletionOfAllUserOnTestIdList(id);
+
+    console.log(all_completions[0]);
+    console.log(all_completions[1]);
     return res.render('allResults', {
         current_username: current_username,
         current_role: current_role,
         current_id: current_id,
-        test: test,
-        all_completions: all_completions
+        all_completions: all_completions,
+        completer_names: completer_names,
+        id_list: id_list
     });
 
 });
@@ -668,8 +679,6 @@ router.get("/userAnswers/:id", async(req, res) => {
 
     let answers = await new AnswersDAO().getAnswersOfCompletions(id);
 
-    console.log(answers[0]);
-
     return res.render('userAnswers', {
         current_username: current_username,
         current_role: current_role,
@@ -679,5 +688,6 @@ router.get("/userAnswers/:id", async(req, res) => {
 
 });
 
+//#end-region
 
 module.exports = router;

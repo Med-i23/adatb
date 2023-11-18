@@ -2,30 +2,37 @@
 <html lang="en">
 <head>
     <%- include('assets/head') %>
+
 </head>
 <header>
     <%- include('assets/header') %>
 </header>
 <body>
+
+<div class="tests">
+
     <table class="table">
         <thead>
         <tr>
-            <th>User</th>
-            <th>Score</th>
+            <th>Name</th>
             <th>Date</th>
+            <th>Minimum Point</th>
+            <th>Score</th>
             <th>Answers</th>
         </tr>
         </thead>
         <tbody>
-            <%for (var i = 0; i < completions.length; i++){%>
-                <tr>
-                    <td><%= %></td>
-                    <td>95</td>
-                    <td>2023-11-15</td>
-                </tr>
-            <% }%>
+        <%for (var i = 0; i < all_completions.length; i++){%>
+        <tr <%if(all_completions[i].score >= all_completions[i].minpoint){ %>style="background-color: rgba(0,157,0,0.87); color: white" <%}%>>
+            <td><%= completer_names[i].name%></td>
+            <td><%= all_completions[i].creationdate%></td>
+            <td><%= all_completions[i].minpoint%></td>
+            <td><%= all_completions[i].score%></td>
+            <td><a href="/userAnswers/<%= id_list[i].id%>" class="linkbuttons" style="float: left">Answers</a></td>
+        </tr>
+        <% } %>
         </tbody>
     </table>
-
+</div>
 </body>
 </html>

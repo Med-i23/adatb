@@ -54,18 +54,23 @@
 <body>
 <div class="tests">
     <% for (var i = 0; i < all_test.length; i++) {
-        let passed = false;
-        for(var j = 0; j < passedTests.length; j++){
-            if(all_test[i].name === passedTests[j].name){
-                passed = true;
-                break;
+        let passed = null;
+        for(var j = 0; j < completions.length; j++){
+            if(all_test[i].name === completions[j].name) {
+                passed = false;
+                if (completions[j].score >= completions[j].minpoint) {
+                    passed = true;
+                    break;
+                }
             }
         }
     %>
-    <div class="card" <% if(passed === true){ %> style="background-color: #029802; color: white"<% } %>>
+    <div class="card" <% if(passed === true){ %> style="background-color: #029802; color: white"<% } else if(passed===false){ %>style="background-color: red; color: white"<%}%>>
         <div class="question"><%= all_test[i].name%></div>
 
         <% if(passed === true){ %> <div>Passed!</div> <% } %>
+        <% if(passed === false){ %> <div>Failed!</div> <% } %>
+        <% if(passed === null){ %> <div>Not done yet</div> <% } %>
         <div>
             <a href="/userResult/<%= all_test[i].id%>" class="linkbuttons">Your results</a>
         </div>

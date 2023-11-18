@@ -58,10 +58,11 @@
 <% }%>
 
 
-
+<%if (current_role==="ROLE_ADMIN" || current_role==="ROLE_TEACHER"){ %>
 <div>
 <a href="/createTest" class="createtest">Create Test</a>
 </div>
+<% } %>
 
 <div class="tests">
     <%for (var i = 0; i < all_test.length; i++) {%>

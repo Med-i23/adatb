@@ -3,27 +3,53 @@
 <head>
     <%- include('assets/head') %>
 
+    <style>
+        .main{
+            display: grid;
+            justify-content: space-around;
+            align-items: center;
+            height: 80vh;
+            alignment: center;
+            text-align: center;
+        }
+
+        .mainbuttons{
+            display: inline-block;
+            padding: 40px 45px;
+            text-decoration: none;
+            background-color: #007bff;
+            color: white;
+            border: 1px solid black;
+            transition: background-color 0.2s;
+        }
+
+        .mainbuttons:hover{
+            background-color: #0055ad;
+            border: 1px solid black;
+        }
+
+    </style>
 </head>
 
 <header>
     <%- include('assets/header')%>
 </header>
 <body>
-<div>
+<div class="main">
     <div>
-        <a href="/tests">Tests</a>
+        <a href="/tests" class="mainbuttons">Tests</a>
     </div>
     <div>
-        <a href="/results">Results</a>
+        <a href="/results" class="mainbuttons">Results</a>
     </div>
     <% if(current_role==="ROLE_ADMIN" || current_role==="ROLE_TEACHER"){%>
     <div>
-        <a href="/questions">Questions</a>
+        <a href="/questions" class="mainbuttons">Questions</a>
     </div>
     <%}%>
     <% if(current_role==="ROLE_ADMIN"){%>
     <div>
-        <a href="#">User Role Manager</a>
+        <a href="#" class="mainbuttons">User Role Manager</a>
     </div>
     <%}%>
 </div>
