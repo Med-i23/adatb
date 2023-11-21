@@ -90,7 +90,7 @@ router.post("/login", async(req, res) => {
                 return res.render('index', {
                     current_role: null,
                     token: null,
-                    hibaLogin: "Nem jó a jelszó.",
+                    hibaLogin: "Invalid password",
                     hibaRegister: null
                 });
 
@@ -101,7 +101,7 @@ router.post("/login", async(req, res) => {
         return res.render('index', {
             current_role: null,
             token: null,
-            hibaLogin:"Nem létező felhasználónév.",
+            hibaLogin:"Username doesn't exists",
             hibaRegister:null
         });
     }
@@ -135,21 +135,21 @@ router.post("/register", async(req, res) => {
             current_role: null,
             token: null,
             hibaLogin: null,
-            hibaRegister:"Ez a felhasználónév már foglalt"
+            hibaRegister:"Username already taken"
         });
     }if (password!==password2){
         return res.render('index', {
             current_role: null,
             token: null,
             hibaLogin: null,
-            hibaRegister:"A két jelszó nem ugyanaz"
+            hibaRegister:"Passwords doesn't match"
         });
     }if (name===""||password===""||password2===""||username===""){
         return res.render('index', {
             current_role: null,
             token: null,
             hibaLogin: null,
-            hibaRegister:"Minden mezőt kötelező kitölteni"
+            hibaRegister:"Fill out everything"
         });
 
     }
@@ -160,7 +160,7 @@ router.post("/register", async(req, res) => {
     return res.render('index', {
         current_role: null,
         token: null,
-        hibaLogin: "Sikeres Regisztráció",
+        hibaLogin: "Register successful!",
         hibaRegister:null
     });
 
@@ -416,7 +416,6 @@ router.get("/tests", async (req, res) => {
     }
     let tests = await new TestsDAO().getTests();
     let count = await new QuestionsDAO().getQuestionCountOfAllTest();
-
     return res.render('tests', {
         current_username: current_username,
         current_role: current_role,
@@ -565,7 +564,6 @@ router.post("/addTest", async (req, res) => {
             current_role = decodedToken.role;
         });
     }
-    let tests = await new TestsDAO().getTests();
     let count = await new QuestionsDAO().getQuestionCountOfAllTest();
     let is_there = await new TestsDAO().getTestName(name);
 
@@ -579,11 +577,12 @@ router.post("/addTest", async (req, res) => {
     }
     else{
         await new TestsDAO().createTest(current_id, name, date, minpoint, noq);
+        let tests = await new TestsDAO().getTests();
         return res.render('tests', {
             current_role: current_role,
             current_id: current_id,
             current_username: current_username,
-            confirm_message: "Maximum message capacity!",
+            confirm_message: "Test Created!",
             count: count,
             all_test: tests
         });
@@ -707,7 +706,6 @@ router.post("/changeTestName/:id", async (req, res) => {
         });
     }
 
-
 });
 //#end-region
 
@@ -755,16 +753,12 @@ router.get("/allResults/:id", async(req, res) => {
 
 
     let all_completions = await new CompletionDAO().getCompletionsByTestId(id);
-    let completer_names = await new CompletionDAO().getCompletionsFullNamesListByTestId(id);
-    let id_list = await new CompletionDAO().getCompletionOfAllUserOnTestIdList(id);
 
     return res.render('allResults', {
         current_username: current_username,
         current_role: current_role,
         current_id: current_id,
-        all_completions: all_completions,
-        completer_names: completer_names,
-        id_list: id_list
+        all_completions: all_completions
     });
 
 });

@@ -50,7 +50,6 @@ class UsersDAO {
         return;
     };
 
-
 }
 
 module.exports = UsersDAO;

@@ -39,35 +39,17 @@ class CompletionsDao{
         return results;
     }
 
-    /*getting all completions of all users on a test*/
     async getCompletionsByTestId(test_id){
         const connection = await mysql.createConnection({host:'localhost',user:'root',database:'moodletest'});
-        const [results, query]= await connection.execute('SELECT * FROM completion JOIN user ON completion.completer_id=user.id JOIN test ON test.id = completion.test_id WHERE test_id=? ORDER BY user.username', [test_id]);
+        const [results, query]= await connection.execute('SELECT date, minpoint, score, completion.id AS completionID, user.name AS FullName FROM completion JOIN user ON completion.completer_id=user.id JOIN test ON test.id = completion.test_id WHERE test_id=? ORDER BY user.username', [test_id]);
         connection.end();
         return results;
     }
-
-    /*getting the list of Full names of completers in order*/
-    async getCompletionsFullNamesListByTestId(test_id){
-        const connection = await mysql.createConnection({host:'localhost',user:'root',database:'moodletest'});
-        const [results, query]= await connection.execute('SELECT user.name FROM completion JOIN user ON completion.completer_id=user.id JOIN test ON test.id = completion.test_id WHERE test_id=? ORDER BY user.username', [test_id]);
-        connection.end();
-        return results;
-    }
-
-    /*seperate id list for the answer listing by all users*/
-    async getCompletionOfAllUserOnTestIdList(test_id){
-        const connection = await mysql.createConnection({host:'localhost',user:'root',database:'moodletest'});
-        const [results, query] = await connection.execute('SELECT completion.id FROM completion JOIN user ON completion.completer_id=user.id JOIN test ON test.id = completion.test_id WHERE test_id=? ORDER BY user.username', [test_id]);
-        connection.end();
-        return results;
-    }
-
 
     /*getting the names of tests that the user passed*/
     async getAllCompletionOfUser(completer_id){
         const connection = await mysql.createConnection({host:'localhost',user:'root',database:'moodletest'});
-        const [results, query]= await connection.execute('SELECT * FROM completion JOIN test ON completion.test_id = test.id WHERE completer_id=?;', [completer_id]);
+        const [results, query]= await connection.execute('SELECT * FROM completion JOIN test ON completion.test_id = test.id WHERE completer_id=?', [completer_id]);
         connection.end();
         return results;
     }

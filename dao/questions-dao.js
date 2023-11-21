@@ -22,14 +22,6 @@ class QuestionsDao{
         return;
     };
 
-    async getTestIdByQuestionId(id){
-        const connection = await mysql.createConnection({host:'localhost',user:'root',database:'moodletest'});
-        const results= await connection.execute('SELECT test_id FROM question WHERE id=?', [id]);
-        connection.end();
-        return results[0][0];
-    }
-
-
     async getNumberOfQuestionsByTestID(test_id){
         const connection = await mysql.createConnection({host:'localhost',user:'root',database:'moodletest'});
         const results= await connection.execute('SELECT COUNT(test_id) AS number FROM question WHERE test_id=?', [test_id]);
@@ -58,20 +50,6 @@ class QuestionsDao{
         return results;
     }
 
-    async getQuestionsByText(text){
-        const connection = await mysql.createConnection({host:'localhost',user:'root',database:'moodletest'});
-        const [results,query]= await connection.execute('SELECT text FROM question WHERE LIKE text');
-        connection.end();
-        return results;
-    }
-
-    async asignTestToQuestion(test_id, text){
-        const connection = await mysql.createConnection({host:'localhost',user:'root',database:'moodletest'})
-        await connection.query('UPDATE question SET test_id=? WHERE text=? AND test_id=NULL', [test_id, text])
-        connection.end();
-        return;
-    }
-
     async getTestNames(){
         const connection = await mysql.createConnection({host:'localhost',user:'root',database:'moodletest'})
         const [results,query]= await connection.execute('SELECT name FROM `question` JOIN test ON question.test_id = test.id');
@@ -81,7 +59,7 @@ class QuestionsDao{
 
     async getQuestionCountOfAllTest(){
         const connection = await mysql.createConnection({host:'localhost',user:'root',database:'moodletest'})
-        const [results,query]= await connection.execute('SELECT COUNT(test_id) AS count FROM question GROUP BY test_id ORDER by test_id;');
+        const [results,query]= await connection.execute('SELECT COUNT(test_id) AS count FROM question GROUP BY test_id ORDER by test_id');
         connection.end();
         return results;
     }
