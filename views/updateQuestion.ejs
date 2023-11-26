@@ -10,7 +10,7 @@
 </header>
 <body>
 <div class="container">
-    <form method="POST"  action="/editQuestion/<%= current_question.id%>" id="form-container">
+    <form method="POST"  action="/editQuestion/<%= current_question.id%>" class="form-container">
         <label for="question">Question:</label>
         <input type="text" id="question" name="text" value="<%= current_question.text%>" required="required">
         <br>
