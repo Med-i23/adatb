@@ -35,14 +35,14 @@
             padding: 5px 10px;
             margin: 25px 0 10px 22px;
             text-decoration: none;
-            background-color: #007bff; /* Green background color */
-            color: white; /* White text color */
-            border: 1px solid black; /* Green border */
+            background-color: #007bff;
+            color: white;
+            border: 1px solid black;
             transition: background-color 0.3s;
         }
         .createtest:hover {
-            background-color: #0055ad; /* Darker green on hover */
-            border: 1px solid black; /* Darker green border on hover */
+            background-color: #0055ad;
+            border: 1px solid black;
         }
 
     </style>
@@ -55,7 +55,6 @@
 <% if(confirm_message){ %>
 <p class="confirm"><%- confirm_message%></p>
 <% }%>
-
 
 <%if (current_role==="ROLE_ADMIN" || current_role==="ROLE_TEACHER"){ %>
 <div>
